@@ -48,7 +48,7 @@ app.get("/", (req, res) => res.send("Hello from Node.js demo 🚀"));
 
 // Latency simulation
 app.get("/slow", (req, res) => {
-  setTimeout(() => res.send("This was slow..."), 2000);
+  setTimeout(() => res.send("This was slow...."), 2000);
 });
 
 // Error simulation
