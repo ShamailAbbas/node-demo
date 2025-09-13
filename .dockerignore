@@ -1,3 +1,4 @@
 .github
 .dockerignore
 .env*
+node_modules
