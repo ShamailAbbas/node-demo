@@ -55,17 +55,25 @@ app.get("/load", (req, res) => {
 });
 
 // --- Token-protected Metrics endpoint ---
-app.get("/metrics", (req, res) => {
+app.get("/metrics", async (req, res) => {
   const authHeader = req.headers['authorization'];
   const token = process.env.METRICS_TOKEN;
-console.log("token is ",token)
-  // // Expect token in format: "Bearer <token>"
-  // if (!authHeader || authHeader !== `Bearer ${token}`) {
-  //   return res.status(401).send("Unauthorized");
-  // }
 
-  res.set("Content-Type", register.contentType);
-  res.end(register.metrics());
+  console.log("Loaded METRICS_TOKEN:", token ? "✅ yes" : "❌ no");
+
+  // Expect token in format: "Bearer <token>"
+  if (!authHeader || authHeader !== `Bearer ${token}`) {
+    return res.status(401).send("Unauthorized");
+  }
+
+  try {
+    res.set("Content-Type", register.contentType);
+    const metrics = await register.metrics();  // Await the Promise
+    res.send(metrics);                         // Send as string
+  } catch (err) {
+    console.error("Failed to get metrics:", err);
+    res.status(500).send("Failed to get metrics");
+  }
 });
 
 // --- Start server ---
