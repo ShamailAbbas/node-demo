@@ -1,3 +1,6 @@
+// Load .env variables if present (for local development)
+require('dotenv').config();
+
 const express = require("express");
 const client = require("prom-client");
 
@@ -43,30 +46,28 @@ app.use((req, res, next) => {
 });
 
 // --- Demo endpoints ---
-// Fast response
 app.get("/", (req, res) => res.send("Hello from Node.js demo 🚀"));
-
-// Latency simulation
-app.get("/slow", (req, res) => {
-  setTimeout(() => res.send("This was slow...."), 2000);
-});
-
-// Error simulation
-app.get("/error", (req, res) => {
-  res.status(500).send("Simulated server error");
-});
-
-// Traffic generator
+app.get("/slow", (req, res) => setTimeout(() => res.send("This was slow...."), 2000));
+app.get("/error", (req, res) => res.status(500).send("Simulated server error"));
 app.get("/load", (req, res) => {
   for (let i = 0; i < 1000; i++) Math.sqrt(Math.random() * i);
   res.send("Generated CPU load");
 });
 
-// Metrics endpoint
-app.get("/metrics", async (req, res) => {
+// --- Token-protected Metrics endpoint ---
+app.get("/metrics", (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = process.env.METRICS_TOKEN;
+
+  // Expect token in format: "Bearer <token>"
+  if (!authHeader || authHeader !== `Bearer ${token}`) {
+    return res.status(401).send("Unauthorized");
+  }
+
   res.set("Content-Type", register.contentType);
-  res.end(await register.metrics());
+  res.end(register.metrics());
 });
 
+// --- Start server ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Demo app running on port ${PORT}`));
