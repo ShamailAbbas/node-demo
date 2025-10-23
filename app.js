@@ -56,15 +56,15 @@ app.get("/load", (req, res) => {
 
 // --- Token-protected Metrics endpoint ---
 app.get("/metrics", async (req, res) => {
-  const authHeader = req.headers['authorization'];
-  const token = process.env.METRICS_TOKEN;
+  // const authHeader = req.headers['authorization'];
+  // const token = process.env.METRICS_TOKEN;
 
-  console.log("Loaded METRICS_TOKEN:", token ? "✅ yes" : "❌ no");
+  // console.log("Loaded METRICS_TOKEN:", token ? "✅ yes" : "❌ no");
 
-  // Expect token in format: "Bearer <token>"
-  if (!authHeader || authHeader !== `Bearer ${token}`) {
-    return res.status(401).send("Unauthorized");
-  }
+  // // Expect token in format: "Bearer <token>"
+  // if (!authHeader || authHeader !== `Bearer ${token}`) {
+  //   return res.status(401).send("Unauthorized");
+  // }
 
   try {
     res.set("Content-Type", register.contentType);
@@ -79,3 +79,4 @@ app.get("/metrics", async (req, res) => {
 // --- Start server ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Demo app running on port ${PORT}`));
+
