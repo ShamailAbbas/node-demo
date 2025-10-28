@@ -12,21 +12,21 @@ client.collectDefaultMetrics({ register });
 
 // --- Custom Metrics ---
 const httpRequestCounter = new client.Counter({
-  name: "http_requests_total",
+  name: "my_node_app_http_requests_total",
   help: "Total number of HTTP requests",
   labelNames: ["method", "route", "status"]
 });
 register.registerMetric(httpRequestCounter);
 
 const responseTimeHistogram = new client.Histogram({
-  name: "http_response_time_seconds",
+  name: "my_node_app_http_response_time_seconds",
   help: "Response time in seconds",
   labelNames: ["method", "route"]
 });
 register.registerMetric(responseTimeHistogram);
 
 const errorCounter = new client.Counter({
-  name: "http_errors_total",
+  name: "my_node_app_http_errors_total",
   help: "Total number of HTTP errors",
   labelNames: ["method", "route"]
 });
@@ -79,6 +79,7 @@ app.get("/metrics", async (req, res) => {
 // --- Start server ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Demo app running on port ${PORT}`));
+
 
 
 
